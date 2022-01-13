@@ -1,0 +1,26 @@
+######################################################################################
+#  Enviar el último fichero creado en una ruta y enviarlo por FTP                    #
+######################################################################################
+
+#STEP01  Selecionar el fichero mas reciente de la carpeta
+    $dir = ""               #Directorio donde vamos hacer el envio.
+    $latest = Get-ChildItem -Path $dir | Sort-Object LastAccessTime -Descending | Select-Object -First 1
+
+#cargado en la variable $latest.name
+
+#STEP02 Paso de Envio de fichero por ftp. 
+
+    #Variable FTP
+    $ftp = "ftp://XXXXXXXXX/" 
+    $user = "XXX" 
+    $pass = "XXXXX"
+    $itemName=$latest.name
+    $itemFullName="$dir\$latest" 
+
+    #Envio FTP
+    $webclient = New-Object System.Net.WebClient 
+    $webclient.Credentials = New-Object System.Net.NetworkCredential($user,$pass)  
+    $itemName=$latest.name
+    $itemFullName="$dir\$latest"
+    $uri = New-Object System.Uri($ftp+$itemName) 
+    $webclient.UploadFile($uri, $itemFullName)
